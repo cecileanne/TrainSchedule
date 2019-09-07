@@ -1,8 +1,3 @@
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script src="https://momentjs.com/downloads/moment.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-database.js"></script>
-
 // Firebase Information
 var firebaseConfig = {
   apiKey: "AIzaSyCUCeMQtdbbUyPQjmoUv1mpRAYezR4-mis",
@@ -16,45 +11,57 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+// Thing you should always do Please Remember in the future.
+const database = firebase.database();
+
 // Ready the page
-$(document).ready(),
-  function() {
-    // Event Listener for the form
-    $("#submit").on("click", function(event) {
-      event.preventDefault();
+$(document).ready(function() {
+  // Event Listener for the form
+  $(document).on("click", "#submitButton", function(event) {
+    event.preventDefault();
 
-      const trainName = $("#trainName")
-        .val()
-        .trim();
-      const destination = $("#destination")
-        .val()
-        .trim();
-      const firstTrainTime = $("#firstTrainTime")
-        .val()
-        .trim();
-      const frequency = $("#frequency")
-        .val()
-        .trim();
-      console.log(trainName, destination, firstTrainTime, frequency);
+    const trainName = $("#trainName")
+      .val()
+      .trim();
+    const destination = $("#destination")
+      .val()
+      .trim();
+    const firstTrainTime = $("#firstTrainTime")
+      .val()
+      .trim();
+    const frequency = $("#frequency")
+      .val()
+      .trim();
 
-      // Send the form info to the database
-      database.ref().push({
-        trainName,
-        destination,
-        firstTrainTime,
-        frequency
-      });
+    // Make sure it's working
+    console.log(trainName);
+
+    // Send the form info to the database
+    database.ref().push({
+      trainName,
+      destination,
+      firstTrainTime,
+      frequency
     });
+  });
 
-    // Creating a snapshot of each entry as an object
-    database.ref().on("child_added", function(childSnapshot) {
-      const {
-        trainName,
-        destination,
-        firstTrainTime,
-        frequency
-      } = childSnapshot.val();
-    });
+  // Creating a snapshot of each entry as an object
+  //   database.ref().on("child_added", function(childSnapshot) {
+  //     const {
+  //       trainName,
+  //       destination,
+  //       firstTrainTime,
+  //       frequency
+  //     } = childSnapshot.val();
+  //   });
 
-    // Termination of the document ready function
-  };
+  // Calculate Minutes Away
+  //  let trainNumbersPassed = (current time minus first train time) divided by frequency with math floor so it's an integer
+  //  let minutesAway = current time (from moment.js) minus (trainsNumbersPassed * Frequency)
+
+  // Calculate Next Arrival
+
+  // Send information to the table from fireBase - Train Name, Destination, Frequency, Next Arrival, Minutes Away
+
+  // Termination of the document ready function
+});
