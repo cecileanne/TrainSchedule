@@ -6,8 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-database.js"></script>
+    <script src="script.js"></script>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -74,9 +75,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="firstTrainTime"
-            >First Train Time (military time HH:MM)</label
-          >
+          <label for="firstTrainTime">First Train Time</label>
           <input
             type="time"
             class="form-control"
@@ -93,7 +92,9 @@
             placeholder="20"
           />
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" class="submit">
+          Submit
+        </button>
       </form>
     </div>
 
