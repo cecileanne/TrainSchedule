@@ -58,7 +58,7 @@ $(document).ready(function() {
       const element = arrivalTimes[arrivalIndex];
     }
     //  let current time = moment.js
-    const currentTime = moment().format();
+    const currentTime = moment().format("hh:mm");
     //  remove an index from the array if it is less than (earlier) that currentTime
     //  arrivalTimes[0] is the next Arrival
   } // termination of calculateArrivals
@@ -81,8 +81,8 @@ $(document).ready(function() {
   $("#trainTable").prepend(tableRow);
 
   // Refresh the page every minute
-  $("#clock").text(moment().format("MM/DD/YYYY hh:mm:ss"));
+  $("#clock").text(moment().format("hh:mm"));
   setInterval(() => {
-    $("#clock").text(moment().format("MM/DD/YYYY hh:mm:ss"));
+    $("#clock").text(moment().format("hh:mm"));
   }, 60000);
 }); // Termination of the document ready function
