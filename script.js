@@ -37,7 +37,7 @@ $(document).ready(function() {
     // console.log(trainName);
 
     // Send the form info to the database
-    database.ref().push({
+    database.ref("trainInfo").push({
       trainName,
       destination,
       firstTrainTime,
@@ -46,43 +46,63 @@ $(document).ready(function() {
   });
 
   // Calculate Next Arrival
-  function calculateArrivals() {
-    //  create an array called arrivalTimes in which each index is an arrival time (the schedule)
-    const arrivalTimes = [];
-    //  for loop firstTrainTime + frequency
-    for (
-      let arrivalIndex = 0;
-      arrivalIndex < arrivalTimes.length;
-      arrivalIndex + frequency
-    ) {
-      const element = arrivalTimes[arrivalIndex];
-    }
-    //  let current time = moment.js
+  function calculateArrivals(train) {
+    let firstTrainTime = train.firstTrainTime;
+    const frequency = train.frequency;
     const currentTime = moment().format("hh:mm");
-    //  remove an index from the array if it is less than (earlier) that currentTime
-    //  arrivalTimes[0] is the next Arrival
+    // subtracting a day will allow for more time so everything is theoretically happening the previous day and time won't stop at the current time
+    firstTrainTime = moment(firstTrainTime, "hh:mm").subtract(1, "days");
+    // console.log(firstTrainTime);
+
+    // calculate the difference use modulo to use the remainder
+    const diff = moment().diff(firstTrainTime, "minutes");
+    const moduloTime = diff % moment(frequency, "minutes");
+    // console.log(moduloTime);
+
+    let minutesAway = frequency - moduloTime;
+    // console.log(minutesAway);
   } // termination of calculateArrivals
 
+  // //  create an array called arrivalTimes in which each index is an arrival time (the schedule)
+  // const arrivalTimes = [];
+  // //  for loop firstTrainTime + frequency
+  //  let current time = moment.js
+  //  remove an index from the array if it is less than (earlier) that currentTime (shift)
+  //  arrivalTimes[0] is the next Arrival
+
   // Calculate Minutes Away
-  const minutesAway = nextArrival - currentTime;
+  //const minutesAway = nextArrival - currentTime;
 
   // Creating a snapshot of each entry as an object
-  database.ref().on("child_added", function(childSnapshot) {
+  database.ref("trainInfo").on("child_added", function(childSnapshot) {
+    //  console.log(childSnapshot.val());
     const {
       trainName,
       destination,
       firstTrainTime,
       frequency
     } = childSnapshot.val();
+    // put the snapshot into it's own object to call back to
+    const train = {
+      trainName,
+      destination,
+      firstTrainTime,
+      frequency
+    };
+    // console.log(train);
+    rowRefresh(train);
   });
 
   // Send information to the table from fireBase - Train Name, Destination, Frequency, Next Arrival, Minutes Away
-  const tableRow = `<tr><th scope="row">${trainName}</th><td>${destination}</td><td>${frequency}</td><td>${nextArrival}</td><td>${minutesAway}</td></tr>`;
-  $("#trainTable").prepend(tableRow);
+  function rowRefresh(train) {
+    calculateArrivals(train);
+    const tableRow = `<tr><th scope="row">${train.trainName}</th><td>${train.destination}</td><td>${train.frequency}</td><td>${train.nextArrival}</td><td>${train.minutesAway}</td></tr>`;
+    $("#trainTable").prepend(tableRow);
 
-  // Refresh the page every minute
-  $("#clock").text(moment().format("hh:mm"));
-  setInterval(() => {
+    // Refresh the page every minute
     $("#clock").text(moment().format("hh:mm"));
-  }, 60000);
+    setInterval(() => {
+      $("#clock").text(moment().format("hh:mm"));
+    }, 60000);
+  } // Termination of row refresh
 }); // Termination of the document ready function
