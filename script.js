@@ -34,7 +34,7 @@ $(document).ready(function() {
       .trim();
 
     // Make sure it's working
-    console.log(trainName);
+    // console.log(trainName);
 
     // Send the form info to the database
     database.ref().push({
@@ -45,23 +45,44 @@ $(document).ready(function() {
     });
   });
 
-  // Creating a snapshot of each entry as an object
-  //   database.ref().on("child_added", function(childSnapshot) {
-  //     const {
-  //       trainName,
-  //       destination,
-  //       firstTrainTime,
-  //       frequency
-  //     } = childSnapshot.val();
-  //   });
+  // Calculate Next Arrival
+  function calculateArrivals() {
+    //  create an array called arrivalTimes in which each index is an arrival time (the schedule)
+    const arrivalTimes = [];
+    //  for loop firstTrainTime + frequency
+    for (
+      let arrivalIndex = 0;
+      arrivalIndex < arrivalTimes.length;
+      arrivalIndex + frequency
+    ) {
+      const element = arrivalTimes[arrivalIndex];
+    }
+    //  let current time = moment.js
+    const currentTime = moment().format();
+    //  remove an index from the array if it is less than (earlier) that currentTime
+    //  arrivalTimes[0] is the next Arrival
+  } // termination of calculateArrivals
 
   // Calculate Minutes Away
-  //  let trainNumbersPassed = (current time minus first train time) divided by frequency with math floor so it's an integer
-  //  let minutesAway = current time (from moment.js) minus (trainsNumbersPassed * Frequency)
+  const minutesAway = nextArrival - currentTime;
 
-  // Calculate Next Arrival
+  // Creating a snapshot of each entry as an object
+  database.ref().on("child_added", function(childSnapshot) {
+    const {
+      trainName,
+      destination,
+      firstTrainTime,
+      frequency
+    } = childSnapshot.val();
+  });
 
   // Send information to the table from fireBase - Train Name, Destination, Frequency, Next Arrival, Minutes Away
+  const tableRow = `<tr><th scope="row">${trainName}</th><td>${destination}</td><td>${frequency}</td><td>${nextArrival}</td><td>${minutesAway}</td></tr>`;
+  $("#trainTable").prepend(tableRow);
 
-  // Termination of the document ready function
-});
+  // Refresh the page every minute
+  $("#clock").text(moment().format("MM/DD/YYYY hh:mm:ss"));
+  setInterval(() => {
+    $("#clock").text(moment().format("MM/DD/YYYY hh:mm:ss"));
+  }, 60000);
+}); // Termination of the document ready function
