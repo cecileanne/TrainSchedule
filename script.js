@@ -54,13 +54,34 @@ $(document).ready(function() {
     firstTrainTime = moment(firstTrainTime, "hh:mm").subtract(1, "days");
     // console.log(firstTrainTime);
 
-    // calculate the difference use modulo to use the remainder
-    const diff = moment().diff(firstTrainTime, "minutes");
-    const moduloTime = diff % moment(frequency, "minutes");
-    // console.log(moduloTime);
+    // TO DO: Check this - will trains that don't run on a frequency divisible by 24 run into a problem?
+    //  i.e. if a train leaves at 1pm today and has a frequency of 7 hours, then it will leave at 2am the next day?
+    // Check if we ever get a negative number
+    //  adding a moment for the train tomorrow from the current time will guarantee that it will be a positive number of minutes until the next train
+    const currentMoment = moment();
+    const momentNow = currentMoment.toObject();
+    let tomorrowsTrainTime = firstTrainTime;
+    tomorrowsTrainTime.add(1, "days");
+    console.log(
+      `First scheduled train departure for ` +
+        train.trainName +
+        ` is ` +
+        tomorrowsTrainTime.format(`hh:mm`)
+    );
 
-    let minutesAway = frequency - moduloTime;
-    // console.log(minutesAway);
+    // calculate the difference use modulo to use the remainder
+    const diff = tomorrowsTrainTime.diff(currentMoment, "minutes");
+    const moduloTime = diff % parseInt(frequency);
+    console.log(
+      `modulo time for the train ` + train.trainName + ` is ` + moduloTime
+    );
+
+    let minutesAway = moduloTime;
+    console.log(
+      `minutes away for train ` + train.trainName + ` is ` + minutesAway
+    );
+
+    // TO DO: Calculate next arrival
   } // termination of calculateArrivals
 
   // //  create an array called arrivalTimes in which each index is an arrival time (the schedule)
@@ -69,9 +90,8 @@ $(document).ready(function() {
   //  let current time = moment.js
   //  remove an index from the array if it is less than (earlier) that currentTime (shift)
   //  arrivalTimes[0] is the next Arrival
-
-  // Calculate Minutes Away
-  //const minutesAway = nextArrival - currentTime;
+  // // Calculate Minutes Away
+  // const minutesAway = nextArrival - currentTime;
 
   // Creating a snapshot of each entry as an object
   database.ref("trainInfo").on("child_added", function(childSnapshot) {
