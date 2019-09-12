@@ -45,7 +45,7 @@ $(document).ready(function() {
     });
   });
 
-  /* set an event listener for the adding of a train to the db */
+  // set an event listener for the adding of a train to the db
   // Creating a snapshot of each entry as an object
   database.ref("trainInfo").on("child_added", function(childSnapshot) {
     //  console.log(childSnapshot.val());
@@ -149,7 +149,7 @@ $(document).ready(function() {
     const tableRow = `<tr><th scope="row">${train.trainName}</th><td>${
       train.destination
     }</td><td>${train.frequency}</td><td>${nextArrivalData.nextArrival.format(
-      "hh:mm"
+      "hh:mm a"
     )}</td><td>${nextArrivalData.minutesAway}</td></tr>`;
     $("#trainTable").prepend(tableRow);
 
